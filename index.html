@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Issue Tracker</title>
+
+    <!-- tailwindcss + daisyui -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+     
+    <!-- favicon -->
+    <link
+      rel="shortcut icon"
+      href="assets/github-logo.png"
+      type="image/x-icon"
+    />
+
+    <!-- font awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <!-- font  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        font-family: "Geist", sans-serif;
+      }
+      .card-shadow {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      }
+      .tab-active-custom {
+        background-color: #581cff !important;
+        color: white !important;
+      }
+    </style>
+  </head>
+  <body class="bg-base-300">
+    <div id="login-page" class="flex items-center justify-center min-h-screen">
+      <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md border">
+        <div class="flex justify-center mb-3">
+          <img src="assets/github-logo.png" alt="" />
+        </div>
+        <div class="text-center mb-6">
+          <h1 class="text-2xl font-bold">GitHub Issue Tracker</h1>
+          <p class="text-gray-500 text-sm">Sign in to manage your issues</p>
+        </div>
+        <form id="login-form" class="space-y-4">
+          <div>
+            <label class="label text-xs font-semibold">Username</label>
+            <input
+              type="text"
+              id="username"
+              placeholder="Enter Username"
+              class="input input-bordered w-full"
+              required
+            />
+            <span class="text-[10px] text-blue-600">Default: admin</span>
+          </div>
+          <div>
+            <label class="label text-xs font-semibold">Password</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter Password"
+              class="input input-bordered w-full"
+              required
+            />
+            <span class="text-[10px] text-blue-600">Default: admin123</span>
+          </div>
+          <button
+            type="submit"
+            class="btn bg-[#581CFF] hover:bg-[#4715d4] text-white w-full border-none"
+          >
+            Sign In
+          </button>
+        </form>
+        <div class="divider">OR</div>
+        <div class="bg-slate-50 p-4 rounded text-center">
+          <p class="text-xs text-gray-400 mb-1">Demo Credentials:</p>
+          <p class="text-sm"><strong>Username:</strong> admin</p>
+          <p class="text-sm"><strong>Password:</strong> admin123</p>
+        </div>
+      </div>
+    </div>
+
+    <div id="main-page" class="hidden">
+      <!-- nav  -->
+      <nav class="navbar bg-white border-b px-4 lg:px-20 py-4">
+        <div class="flex-1">
+          <a class="flex items-center gap-2 font-bold text-lg">
+            <i class="fab fa-github text-2xl"></i> GitHub Issues Tracker
+          </a>
+        </div>
+        <div class="flex-none gap-2">
+          <div class="join">
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Search issues..."
+              class="input input-bordered join-item input-sm md:input-md w-32 md:w-64"
+            />
+            <button
+              id="search-btn"
+              class="btn join-item bg-[#581CFF] text-white btn-sm md:btn-md border-none"
+            >
+              + New Issue
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <main class="max-w-7xl mx-auto p-6">
+        <!-- buttons -->
+        <div class="flex items-center mb-8 p-6 bg-base-100 mt-16 rounded-lg">
+          <button
+            onclick="filterIssues('All')"
+            class="tab-btn tab px-8 rounded-md tab-active-custom"
+            id="tab-All"
+          >
+            All
+          </button>
+          <button
+            onclick="filterIssues('Open')"
+            class="tab-btn tab px-8 rounded-md"
+            id="tab-Open"
+          >
+            Open
+          </button>
+          <button
+            onclick="filterIssues('Closed')"
+            class="tab-btn tab px-8 rounded-md"
+            id="tab-Closed"
+          >
+            Closed
+          </button>
+        </div>
+
+        <div
+          class="flex justify-between items-center mb-6 bg-white p-5 rounded-lg border"
+        >
+          <div class="flex items-center gap-3">
+            <div class="bg-purple-100 p-2 rounded-full">
+              <i class="fas fa-list-ul text-purple-600"></i>
+            </div>
+            <div>
+              <h2 class="font-bold text-lg">
+                <span id="issue-count">0</span> Issues
+              </h2>
+              <p class="text-xs text-gray-400">
+                Track and manage your project issues
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-4 text-xs font-semibold">
+            <span class="flex items-center gap-1"
+              ><span class="w-2 h-2 rounded-full bg-green-500"></span>
+              Open</span
+            >
+            <span class="flex items-center gap-1"
+              ><span class="w-2 h-2 rounded-full bg-purple-500"></span>
+              Closed</span
+            >
+          </div>
+        </div>
+
+        <div id="loader" class="flex justify-center py-20">
+          <span class="loading loading-spinner loading-lg text-primary"></span>
+        </div>
+
+        <div
+          id="issues-grid"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
+        ></div>
+      </main>
+    </div>
+
+    <dialog id="issue_modal" class="modal">
+      <div class="modal-box w-11/12 max-w-2xl">
+        <div id="modal-content"></div>
+        <div class="modal-action">
+          <form method="dialog">
+            <button class="btn">Close</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="project.js"></script>
+  </body>
+</html>
